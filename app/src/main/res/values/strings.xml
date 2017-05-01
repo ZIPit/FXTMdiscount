@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FXTM discount</string>
+    <string name="NameTitle">check this out!</string>
+    <string name="OfferTitle">Offer Details</string>
+    <string name="addressTitle">Address</string>
+    <string name="whTitle">Working Hours</string>
+    <string name="show_on_map">Show on Map</string>
+
+    <string name="dialog_title">Choose Desired Mapp App please</string>
 </resources>

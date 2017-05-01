@@ -2,16 +2,19 @@ package ziphome.fxtmdiscount2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 //import android.support.v7.widget.SearchView;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.app.SearchManager;
 import java.util.ArrayList;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -67,8 +70,31 @@ public class MainActivity extends AppCompatActivity implements
         search.setOnCloseListener((SearchView.OnCloseListener) this);
         displaylist();
 
+        explistView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                  NamObj namObj = (NamObj) listAdapter.getChild(groupPosition,childPosition);
 
-    }
+                 Intent intent = new Intent (explistView.getContext() , object_details.class);
+                intent.putExtra("valueName",namObj.getName());
+                intent.putExtra("valueOffer",namObj.getoffer());
+                intent.putExtra("valueAddress",namObj.getAddress());
+                intent.putExtra("valueWHours",namObj.getwHours());
+                intent.putExtra("valueGps",namObj.getGps());
+                startActivity(intent);
+
+               // System.err.println(namObj.getAddress());
+
+             //   Toast.makeText(getApplicationContext(), namObj.getName(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        }
+
+
+
+
 
     public void displaylist(){
 
@@ -93,11 +119,15 @@ try {
      Row row = sheet.getRow(0);
      Cell categ = row.getCell(0);
      Cell name = row.getCell(1);
+     Cell offer = row.getCell(2);
+     Cell address = row.getCell(3);
+     Cell wHours = row.getCell(4);
+     Cell gps =  row.getCell(5);
 
      categTmp=categ.getStringCellValue();
 
      nameList = new ArrayList<NamObj>();
-     objname = new NamObj(name.getStringCellValue());
+     objname = new NamObj(name.getStringCellValue(), offer.getStringCellValue(),address.getStringCellValue(),wHours.getStringCellValue(),gps.getStringCellValue());
      nameList.add(objname);
 
      // Loop is starting from 2nd Row of xls list till the end of data
@@ -105,8 +135,12 @@ try {
           row = sheet.getRow(i);
           categ = row.getCell(0);
           name = row.getCell(1);
+          offer = row.getCell(2);
+          address= row.getCell(3);
+          wHours = row.getCell(4);
+          gps =  row.getCell(5);
          if (categTmp==categ.getStringCellValue())  {
-             objname = new NamObj(name.getStringCellValue());
+             objname = new NamObj(name.getStringCellValue(), offer.getStringCellValue(),address.getStringCellValue(),wHours.getStringCellValue(),gps.getStringCellValue());;
              nameList.add(objname);
          }
          else {
@@ -115,7 +149,7 @@ try {
              categTmp = categ.getStringCellValue();
 
              nameList = new ArrayList<NamObj>();
-             objname = new NamObj(name.getStringCellValue());
+             objname = new NamObj(name.getStringCellValue(), offer.getStringCellValue(),address.getStringCellValue(),wHours.getStringCellValue(),gps.getStringCellValue());
              nameList.add(objname);
 
          }
@@ -129,158 +163,6 @@ catch (Exception ex) {
     return;
 }
 
-/*
-        objname = new NamObj("Suenso Spa");
-        nameList.add(objname);
-        objname = new NamObj("Quick Spa Limassol");
-        nameList.add(objname);
-        objname = new NamObj("Limassol Sporting Center");
-        nameList.add(objname);
-        objname = new NamObj("Sanctrum Fitness and spa");
-        nameList.add(objname);
-        objname = new NamObj("Dekathlon Gym");
-        nameList.add(objname);
-        categitem = new Categ("SPA&GYM",nameList);
-        categlist.add(categitem);
-
-
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("Carob Mill Restaurant");
-        nameList.add(objname);
-        objname = new NamObj("Pier One");
-        nameList.add(objname);
-        objname = new NamObj("BEER & BEER – Hofbrau Munchen");
-        nameList.add(objname);
-        objname = new NamObj("Wagamama  ");
-        nameList.add(objname);
-        objname = new NamObj("Hobo Mediterraneo  ");
-        nameList.add(objname);
-        objname = new NamObj("Taras Bulba  ");
-        nameList.add(objname);
-        objname = new NamObj("Burger Lab  ");
-        nameList.add(objname);
-        objname = new NamObj("Columbia Steak House  ");
-        nameList.add(objname);
-        objname = new NamObj("Dionysus Mansion  ");
-        nameList.add(objname);
-        objname = new NamObj("The Noodle house  ");
-        nameList.add(objname);
-        objname = new NamObj("La Boca  ");
-        nameList.add(objname);
-        objname = new NamObj("Gin Fish  ");
-        nameList.add(objname);
-        objname = new NamObj("Do Wine Dine and Up Town Square");
-        nameList.add(objname);
-        objname = new NamObj("Benzai Sushi bar  ");
-        nameList.add(objname);
-        objname = new NamObj("The Fish Market  ");
-        nameList.add(objname);
-        objname = new NamObj("The Garden  ");
-        nameList.add(objname);
-        objname = new NamObj("TGI Fridays  ");
-        nameList.add(objname);
-        objname = new NamObj("Cristal Marina  ");
-        nameList.add(objname);
-        objname = new NamObj("Nippon  ");
-        nameList.add(objname);
-        objname = new NamObj("La Isla  ");
-        nameList.add(objname);
-        objname = new NamObj("Simply Fresh  ");
-        nameList.add(objname);
-        objname = new NamObj("Puesta Oyster bar and Grill");
-        nameList.add(objname);
-        categitem = new Categ("Restaurants / cafe / bars",nameList);
-        categlist.add(categitem);
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("La maison Du Vin");
-        nameList.add(objname);
-        objname = new NamObj("French Depot");
-        nameList.add(objname);
-        objname = new NamObj("Hadjiantonas Winery");
-        nameList.add(objname);
-        objname = new NamObj("Dafermou Winery");
-        categitem = new Categ("Wine Shops / Winery",nameList);
-        categlist.add(categitem);
-
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("Trussardi  ");
-        nameList.add(objname);
-        objname = new NamObj("No name  ");
-        nameList.add(objname);
-        objname = new NamObj("Timinis  ");
-        nameList.add(objname);
-        objname = new NamObj("Wanted Boutique  ");
-        nameList.add(objname);
-        objname = new NamObj("First boutique  ");
-        nameList.add(objname);
-        objname = new NamObj("Elegance  ");
-        nameList.add(objname);
-        objname = new NamObj("Nespresso  ");
-        nameList.add(objname);
-        objname = new NamObj("New York Sweets  ");
-        nameList.add(objname);
-        objname = new NamObj("Pralina  ");
-        nameList.add(objname);
-        objname = new NamObj("La Gallerie");
-        nameList.add(objname);
-        categitem = new Categ("Shops",nameList);
-        categlist.add(categitem);
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("CXC Toys");
-        nameList.add(objname);
-        objname = new NamObj("ELC Toys");
-        nameList.add(objname);
-        categitem = new Categ("Kids Stores",nameList);
-        categlist.add(categitem);
-
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("Vite Flower Shop");
-        nameList.add(objname);
-        objname = new NamObj("Floralink");
-        nameList.add(objname);
-        objname = new NamObj("Flowers & Designs (Rois)");
-        nameList.add(objname);
-        categitem = new Categ("Flower Shops",nameList);
-        categlist.add(categitem);
-
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("Atteshlis Travel Agency  ");
-        nameList.add(objname);
-        objname = new NamObj("Аscot travel  ");
-        nameList.add(objname);
-        objname = new NamObj("Taxi Service");
-        nameList.add(objname);
-        objname = new NamObj("Escape Quest Room");
-        nameList.add(objname);
-        objname = new NamObj("Sayious Adventure Park");
-        nameList.add(objname);
-        objname = new NamObj("Fasouri Waterpark");
-        nameList.add(objname);
-        categitem = new Categ("Entertainment/ Service",nameList);
-        categlist.add(categitem);
-
-
-        nameList = new ArrayList<NamObj>();
-        objname = new NamObj("Narex Car Rent  ");
-        nameList.add(objname);
-        objname = new NamObj("Aida Car Rent  ");
-        nameList.add(objname);
-        objname = new NamObj("Sixt Rent a car  ");
-        nameList.add(objname);
-        objname = new NamObj("Leos Cars  ");
-        nameList.add(objname);
-        objname = new NamObj("Privilage rent a car  ");
-        nameList.add(objname);
-        categitem = new Categ("Car Insurance",nameList);
-        categlist.add(categitem);
-
-*/
 
     }
 
