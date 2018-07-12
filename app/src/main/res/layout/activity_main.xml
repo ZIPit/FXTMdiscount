@@ -84,7 +84,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_weight="100"
                 android:background="#0f6780"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
         </LinearLayout>
 
     </FrameLayout>

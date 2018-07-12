@@ -19,7 +19,8 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="TextView"
-            android:textSize="18sp" />
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/addresstv"

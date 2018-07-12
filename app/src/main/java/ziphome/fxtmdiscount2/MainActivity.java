@@ -3,14 +3,25 @@ package ziphome.fxtmdiscount2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 //import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.app.SearchManager;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -22,8 +33,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.util.IOUtils;
 
 import static android.graphics.Color.BLACK;
+import static java.lang.System.out;
 //import android.widget.SearchView.OnQueryTextListener;
 
 
@@ -47,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
 
     String categTmp;
 
-
+    public static final String TAG="Debug logging";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +124,15 @@ public class MainActivity extends AppCompatActivity implements
     public void initData(){
 
         categTmp ="";
+
+
 try {
+    Log.d(TAG, "initializing ...");
     Workbook wb = WorkbookFactory.create(getAssets().open("listdata.xls"));
+
+  //  FileInputStream fileinp = new FileInputStream(getFilesDir().getAbsolutePath().toString()+"/listdata.xls");
+  //  Workbook wb = WorkbookFactory.create(fileinp);
+    //getFilesDir().getAbsolutePath().toString()+"/listdata.xls"
     // We take first sheet page
      Sheet sheet = wb.getSheetAt(0);
     // Take first row
@@ -124,11 +144,11 @@ try {
      Cell wHours = row.getCell(4);
      Cell gps =  row.getCell(5);
 
-     categTmp=categ.getStringCellValue();
+     categTmp=categ.getStringCellValue();  // Сохраним 1е название категории
 
      nameList = new ArrayList<NamObj>();
      objname = new NamObj(name.getStringCellValue(), offer.getStringCellValue(),address.getStringCellValue(),wHours.getStringCellValue(),gps.getStringCellValue());
-     nameList.add(objname);
+     nameList.add(objname);  // Запишем 1ю строку в массив
 
      // Loop is starting from 2nd Row of xls list till the end of data
      for (int i=1; i< sheet.getPhysicalNumberOfRows(); i++ ){
@@ -139,11 +159,11 @@ try {
           address= row.getCell(3);
           wHours = row.getCell(4);
           gps =  row.getCell(5);
-         if (categTmp==categ.getStringCellValue())  {
+         if (categTmp==categ.getStringCellValue())  {  // заполняем список в пределах одной категории
              objname = new NamObj(name.getStringCellValue(), offer.getStringCellValue(),address.getStringCellValue(),wHours.getStringCellValue(),gps.getStringCellValue());;
              nameList.add(objname);
          }
-         else {
+         else {          // добавляем очередную категию с массивом ее значений в массив категорий
              categitem = new Categ(categTmp,nameList);
              categlist.add(categitem);
              categTmp = categ.getStringCellValue();
@@ -157,12 +177,13 @@ try {
      // Will Add the last category with items
     categitem = new Categ(categTmp,nameList);
     categlist.add(categitem);
-
+  //  wb.close();
+    Log.d(TAG, "Data initialized Successfully ");
 }
 catch (Exception ex) {
-    return;
-}
-
+    Log.d(TAG, "Initialized has been broken ");
+        return;
+    }
 
     }
 
